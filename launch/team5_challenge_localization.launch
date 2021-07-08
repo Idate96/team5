@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+	<!-- params -->
+	<arg name="launch_rviz" 		    default="true"/>
+	<arg name="map_name"            default="team7_mapdecimated_cropped.pcd" />
+
+	<!-- launch SMB -->
+	<!-- <include file="$(find smb)/launch/smb.launch" /> -->
+
+
+	<!-- launch Localization -->
+	<include file="$(find smb_slam)/launch/localization.launch">
+		<arg name="launch_rviz" value="$(arg launch_rviz)"/>
+		<arg name="map_name"            value="$(arg map_name)" />
+	</include>
+
+	<!-- launch transform between base_link frame and map_frame -->
+	<!-- <node pkg="team5" type="base_link_to_map_transform.py" name="transform_listener" output="screen" /> -->
+
+	<!-- launch tf_static transform between map frame and challenge frame, assume no rotation change-->
+	<node pkg="tf" type="static_transform_publisher" name="challenge_frame_broadcaster" args="1.40196 -0.933015 0.385389 0 0 0 1 map challenge_frame 100" />
+
+	<!-- launch Motion Planner, maybe comment this out if it causes troubles if it is being started befor the ICP Visualization on the local PC -->
+	<!-- Use Challenge Frame as global_frame (was previously usually set to tracking_camera_odom)? -->
+	<!-- <include file="$(find smb_navigation)/launch/navigate2d_ompl_team7.launch">
+		<arg name="use_global_map" value="true"/>
+		<arg name="robot_base_frame" value="base_link" />
+	</include> -->
+
+</launch>
